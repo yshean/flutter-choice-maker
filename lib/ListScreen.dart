@@ -2,27 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'PwdRowWidget.dart';
+// import 'PwdRowWidget.dart';
+import 'models/Choice.dart';
+import 'ChoiceRowWidget.dart';
 
 class ListScreen extends StatelessWidget {
-  final List<Pwd> filteredEntries = [
-    Pwd(
-        name: "YS",
-        email: "yshean",
-        url: "dd",
-        password: "gfgfg",
-        notes: "jjjj"),
-    Pwd(name: "YS", email: "yshean", url: "dd", password: "gfgf", notes: "kkk")
-  ];
+  final List<Choice> filteredEntries;
+
+  const ListScreen({Key key, this.filteredEntries});
+  // final List<Pwd> filteredEntries = [
+  //   Pwd(
+  //       name: "YS",
+  //       email: "yshean@gmail.com",
+  //       url: "dd",
+  //       password: "gfgfg",
+  //       notes: "jjjj"),
+  //   Pwd(
+  //       name: "Ferrick",
+  //       email: "ferrick@email.com",
+  //       url: "dd",
+  //       password: "gfgf",
+  //       notes: "kkk")
+  // ];
 
   void btnLaunchTouched(int index) async {
-    String url = filteredEntries[index].url;
-    print("btn launch" + url);
+    String answer = filteredEntries[index].answer;
+    print("btn launch" + answer);
   }
 
   void btnDeleteTouched(int index) async {
-    String url = filteredEntries[index].url;
-    print("btn launch" + url);
+    String answer = filteredEntries[index].answer;
+    print("btn launch" + answer);
   }
 
   _gotoAddScreen(BuildContext context) async {
@@ -68,8 +78,8 @@ class ListScreen extends StatelessWidget {
               dismissal: SlidableDismissal(
                 child: SlidableDrawerDismissal(),
               ),
-              child: PwdRowWidget(
-                pwd: filteredEntries[index],
+              child: ChoiceRowWidget(
+                choiceEntry: filteredEntries[index],
               ),
             ),
           ),
