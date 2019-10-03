@@ -62,6 +62,38 @@ class ListScreen extends StatelessWidget {
       );
     }
 
+    /*
+      res[category].map((choice) => GestureDetector(
+          child: Slidable(
+        key: ValueKey(index),
+        actionPane: SlidableDrawerActionPane(),
+        actions: <Widget>[
+          IconSlideAction(
+            caption: 'Edit',
+            color: Colors.indigo,
+            icon: Icons.edit,
+            onTap: () => btnLaunchTouched(index),
+          ),
+        ],
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () => btnDeleteTouched(index),
+          ),
+        ],
+        dismissal: SlidableDismissal(
+          child: SlidableDrawerDismissal(),
+        ),
+        child: ChoiceRowWidget(
+          choiceEntry: choice,
+        ),
+      )));
+    */
+
+    // WIP Reference: https://medium.com/flutter-community/custom-sticky-headers-in-flutter-248d3c26863
+
     return ListView.separated(
       itemCount: entries.length,
       itemBuilder: (BuildContext context, int index) {
