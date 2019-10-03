@@ -23,13 +23,14 @@ class ListScreen extends StatelessWidget {
     }
   }
 
+  // need to replace index with the item ID (need to be created)
   void btnLaunchTouched(int index) async {
-    String answer = filteredEntries[index].answer;
+    String answer = result[index].answer;
     print("btn launch" + answer);
   }
 
   void btnDeleteTouched(int index) async {
-    String answer = filteredEntries[index].answer;
+    String answer = result[index].answer;
     print("btn delete" + answer);
   }
 
@@ -42,36 +43,68 @@ class ListScreen extends StatelessWidget {
     // var resKeys = result.keys.toList();
 
     // for (var category in resKeys) {
-    arr = result[category]
-        .map<Widget>((Choice choice) => GestureDetector(
-                child: Slidable(
-              key: ValueKey(0),
-              actionPane: SlidableDrawerActionPane(),
-              actions: <Widget>[
-                IconSlideAction(
-                  caption: 'Edit',
-                  color: Colors.indigo,
-                  icon: Icons.edit,
-                  onTap: () => btnLaunchTouched(0),
-                ),
-              ],
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  caption: 'Delete',
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () => btnDeleteTouched(0),
-                ),
-              ],
-              dismissal: SlidableDismissal(
-                child: SlidableDrawerDismissal(),
-              ),
-              child: ChoiceRowWidget(
-                choiceEntry: choice,
-              ),
-            )))
-        .toList();
-    return arr;
+    for (var i = 0; i < result[category].length; i++) {
+      arr.add(GestureDetector(
+          child: Slidable(
+        key: ValueKey(i),
+        actionPane: SlidableDrawerActionPane(),
+        actions: <Widget>[
+          IconSlideAction(
+            caption: 'Edit',
+            color: Colors.indigo,
+            icon: Icons.edit,
+            onTap: () => btnLaunchTouched(i),
+          ),
+        ],
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () => btnDeleteTouched(i),
+          ),
+        ],
+        dismissal: SlidableDismissal(
+          child: SlidableDrawerDismissal(),
+        ),
+        child: ChoiceRowWidget(
+          choiceEntry: result[category].toList()[i],
+        ),
+      )));
+    }
+
+    // arr = result[category]
+    //     .map<Widget>((Choice choice) => GestureDetector(
+    //             child: Slidable(
+    //           key: ValueKey(0),
+    //           actionPane: SlidableDrawerActionPane(),
+    //           actions: <Widget>[
+    //             IconSlideAction(
+    //               caption: 'Edit',
+    //               color: Colors.indigo,
+    //               icon: Icons.edit,
+    //               onTap: () => btnLaunchTouched(0),
+    //             ),
+    //           ],
+    //           secondaryActions: <Widget>[
+    //             IconSlideAction(
+    //               caption: 'Delete',
+    //               color: Colors.red,
+    //               icon: Icons.delete,
+    //               onTap: () => btnDeleteTouched(0),
+    //             ),
+    //           ],
+    //           dismissal: SlidableDismissal(
+    //             child: SlidableDrawerDismissal(),
+    //           ),
+    //           child: ChoiceRowWidget(
+    //             choiceEntry: choice,
+    //           ),
+    //         )))
+    //     .toList();
+    // return arr;
+
+    return arr.toList();
   }
 
   @override
