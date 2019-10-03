@@ -1,4 +1,4 @@
-package com.example.kl_groceries
+package com.example.choice_maker
 
 import android.os.Bundle
 
