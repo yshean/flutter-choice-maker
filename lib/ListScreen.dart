@@ -7,23 +7,24 @@ import 'models/Choice.dart';
 import 'ChoiceRowWidget.dart';
 
 class ListScreen extends StatelessWidget {
-  final List<Choice> filteredEntries;
+  final List<Choice> entries;
+  List<Choice> filteredEntries = [];
 
-  const ListScreen({Key key, this.filteredEntries});
-  // final List<Pwd> filteredEntries = [
-  //   Pwd(
-  //       name: "YS",
-  //       email: "yshean@gmail.com",
-  //       url: "dd",
-  //       password: "gfgfg",
-  //       notes: "jjjj"),
-  //   Pwd(
-  //       name: "Ferrick",
-  //       email: "ferrick@email.com",
-  //       url: "dd",
-  //       password: "gfgf",
-  //       notes: "kkk")
-  // ];
+  ListScreen({Key key, this.entries}) {
+    // loop through categories
+    // use contains() to check if item belongs to the category
+
+    var result = {};
+    Set categories = new Set.from(entries.map((v) => v.category));
+    print(categories);
+
+    for (var cat in categories) {
+      result[cat] = entries.where((entry) => (entry.category == cat));
+    }
+    print(result);
+
+    // filteredEntries.add(Choice(category: "A", answer: "AAA", percentage: 50));
+  }
 
   void btnLaunchTouched(int index) async {
     String answer = filteredEntries[index].answer;
@@ -32,7 +33,7 @@ class ListScreen extends StatelessWidget {
 
   void btnDeleteTouched(int index) async {
     String answer = filteredEntries[index].answer;
-    print("btn launch" + answer);
+    print("btn delete" + answer);
   }
 
   _gotoAddScreen(BuildContext context) async {
@@ -41,8 +42,28 @@ class ListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (entries.length == 0) {
+      return Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+          child: Column(
+            children: <Widget>[
+              Image.asset('assets/images/no_entries.png'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Nothing here yet. Add one?',
+                  style: Theme.of(context).textTheme.title,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
     return ListView.separated(
-      itemCount: filteredEntries.length,
+      itemCount: entries.length,
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           child: new StickyHeader(
@@ -52,7 +73,7 @@ class ListScreen extends StatelessWidget {
               padding: new EdgeInsets.symmetric(horizontal: 15.0),
               alignment: Alignment.centerLeft,
               child: Text(
-                'ALL',
+                entries[index].category,
                 style: Theme.of(context).textTheme.body1,
               ),
             ),
@@ -61,9 +82,9 @@ class ListScreen extends StatelessWidget {
               actionPane: SlidableDrawerActionPane(),
               actions: <Widget>[
                 IconSlideAction(
-                  caption: 'Launch',
+                  caption: 'Edit',
                   color: Colors.indigo,
-                  icon: Icons.launch,
+                  icon: Icons.edit,
                   onTap: () => btnLaunchTouched(index),
                 ),
               ],
@@ -79,7 +100,7 @@ class ListScreen extends StatelessWidget {
                 child: SlidableDrawerDismissal(),
               ),
               child: ChoiceRowWidget(
-                choiceEntry: filteredEntries[index],
+                choiceEntry: entries[index],
               ),
             ),
           ),

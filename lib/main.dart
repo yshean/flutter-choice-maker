@@ -54,21 +54,16 @@ class MyHomePage extends StatelessWidget {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: ListScreen(
-          filteredEntries: [
-            Choice(
-              answer: "YS",
-              percentage: 99.0,
-            ),
-            Choice(
-              answer: "YS",
-              percentage: 99.0,
-            ),
+          entries: [
+            Choice(answer: "YS", percentage: 99.0, category: "A"),
+            Choice(answer: "Ferrick", percentage: 80.0, category: "A"),
+            Choice(answer: "Carbon", percentage: 60.0, category: "B"),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: counter.increment,
-        tooltip: 'Increment',
+        tooltip: 'Add a choice',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
