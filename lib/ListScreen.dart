@@ -8,20 +8,25 @@ import 'ChoiceRowWidget.dart';
 
 class ListScreen extends StatelessWidget {
   final List<Choice> entries;
-  List<Choice> filteredEntries = [];
+  final List<Choice> filteredEntries = [];
+
+  Map result = {};
+  List<Widget> finalList = [Text("Hello")];
 
   ListScreen({Key key, this.entries}) {
     // loop through categories
     // use contains() to check if item belongs to the category
-
-    var result = {};
     Set categories = new Set.from(entries.map((v) => v.category));
-    print(categories);
+    // print(categories);
 
     for (var cat in categories) {
       result[cat] = entries.where((entry) => (entry.category == cat));
     }
-    print(result);
+    // print(result);
+
+    // finalList = _buildList(result);
+    finalList = [Text("hi")];
+    // print(finalList);
 
     // filteredEntries.add(Choice(category: "A", answer: "AAA", percentage: 50));
   }
@@ -38,6 +43,62 @@ class ListScreen extends StatelessWidget {
 
   _gotoAddScreen(BuildContext context) async {
     print("go to add screen");
+  }
+
+  List<Widget> _buildList(Map res) {
+    List<Widget> list = new List<Widget>();
+    var resKeys = res.keys.toList();
+
+    for (var category in resKeys) {
+      list.add(new StickyHeader(
+          header: new Container(
+            height: 40.0,
+            color: Colors.grey.shade100,
+            padding: new EdgeInsets.symmetric(horizontal: 15.0),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              category,
+              // style: Theme.of(context).textTheme.body1,
+            ),
+          ),
+          content: ListView.separated(
+            itemCount: res[category].length,
+            itemBuilder: (BuildContext context, int index) {
+              return res[category].map((choice) => GestureDetector(
+                      child: Slidable(
+                    key: ValueKey(index),
+                    actionPane: SlidableDrawerActionPane(),
+                    actions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Edit',
+                        color: Colors.indigo,
+                        icon: Icons.edit,
+                        onTap: () => btnLaunchTouched(index),
+                      ),
+                    ],
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () => btnDeleteTouched(index),
+                      ),
+                    ],
+                    dismissal: SlidableDismissal(
+                      child: SlidableDrawerDismissal(),
+                    ),
+                    child: ChoiceRowWidget(
+                      choiceEntry: choice,
+                    ),
+                  )));
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(color: Color.fromRGBO(108, 123, 138, 0.2)),
+          )));
+    }
+
+    // print(list);
+    return list;
   }
 
   @override
@@ -62,55 +123,38 @@ class ListScreen extends StatelessWidget {
       );
     }
 
-    return ListView.separated(
-      itemCount: entries.length,
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          child: new StickyHeader(
-            header: new Container(
-              height: 40.0,
-              color: Colors.grey.shade100,
-              padding: new EdgeInsets.symmetric(horizontal: 15.0),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                entries[index].category,
-                style: Theme.of(context).textTheme.body1,
+    // return Column(children: finalList);
+    return ListView.builder(
+        itemCount: result.keys.toList().length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+              child: Slidable(
+            key: ValueKey(index),
+            actionPane: SlidableDrawerActionPane(),
+            actions: <Widget>[
+              IconSlideAction(
+                caption: 'Edit',
+                color: Colors.indigo,
+                icon: Icons.edit,
+                onTap: () => btnLaunchTouched(index),
               ),
+            ],
+            secondaryActions: <Widget>[
+              IconSlideAction(
+                caption: 'Delete',
+                color: Colors.red,
+                icon: Icons.delete,
+                onTap: () => btnDeleteTouched(index),
+              ),
+            ],
+            dismissal: SlidableDismissal(
+              child: SlidableDrawerDismissal(),
             ),
-            content: Slidable(
-              key: ValueKey(index),
-              actionPane: SlidableDrawerActionPane(),
-              actions: <Widget>[
-                IconSlideAction(
-                  caption: 'Edit',
-                  color: Colors.indigo,
-                  icon: Icons.edit,
-                  onTap: () => btnLaunchTouched(index),
-                ),
-              ],
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  caption: 'Delete',
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () => btnDeleteTouched(index),
-                ),
-              ],
-              dismissal: SlidableDismissal(
-                child: SlidableDrawerDismissal(),
-              ),
-              child: ChoiceRowWidget(
-                choiceEntry: entries[index],
-              ),
+            child: ChoiceRowWidget(
+              choiceEntry:
+                  Choice(answer: "YS", percentage: 99.0, category: "A"),
             ),
-          ),
-          onTap: () => _gotoAddScreen(
-            context,
-          ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) =>
-          const Divider(color: Color.fromRGBO(108, 123, 138, 0.2)),
-    );
+          ));
+        });
   }
 }
