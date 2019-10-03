@@ -21,8 +21,6 @@ class ListScreen extends StatelessWidget {
     for (var cat in categories) {
       result[cat] = entries.where((entry) => (entry.category == cat));
     }
-
-    print(result.keys.length);
   }
 
   void btnLaunchTouched(int index) async {
@@ -98,61 +96,22 @@ class ListScreen extends StatelessWidget {
       );
     }
 
-    // return Column(children: finalList);
     return ListView.builder(
         itemCount: result.keys.length,
         itemBuilder: (BuildContext context, int index) {
-          return Column(children: _buildList(result.keys.toList()[index]));
-        });
-  }
-}
-
-/*
-    return ListView.builder(
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        return StickyHeader(
+          var category = result.keys.toList()[index];
+          return StickyHeader(
               header: Container(
                 height: 40.0,
                 color: Colors.grey.shade100,
                 padding: new EdgeInsets.symmetric(horizontal: 15.0),
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  categories[index],
+                  category,
                   style: Theme.of(context).textTheme.body1,
                 ),
               ),
-              content: Column(
-                children: GestureDetector(
-                            child: Slidable(
-                              key: ValueKey(index),
-                              actionPane: SlidableDrawerActionPane(),
-                              actions: <Widget>[
-                                IconSlideAction(
-                                  caption: 'Edit',
-                                  color: Colors.indigo,
-                                  icon: Icons.edit,
-                                  onTap: () => btnLaunchTouched(index),
-                                ),
-                              ],
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
-                                  caption: 'Delete',
-                                  color: Colors.red,
-                                  icon: Icons.delete,
-                                  onTap: () => btnDeleteTouched(index),
-                                ),
-                              ],
-                              dismissal: SlidableDismissal(
-                                child: SlidableDrawerDismissal(),
-                              ),
-                              child: ChoiceRowWidget(
-                                choiceEntry: entries[index],
-                              ),
-                            ),
-                )
-              )
-        )
-      }
-    );
-    */
+              content: Column(children: _buildList(category)));
+        });
+  }
+}
