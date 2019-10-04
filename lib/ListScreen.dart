@@ -97,21 +97,34 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.length == 0) {
-      return Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
-          child: Column(
-            children: <Widget>[
-              Image.asset('assets/images/no_entries.png'),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Nothing here yet. Add one?',
-                  style: Theme.of(context).textTheme.title,
-                ),
-              )
-            ],
+      return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text("Choice List"),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+            child: Column(
+              children: <Widget>[
+                Image.asset('assets/images/no_entries.png'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Nothing here yet. Add one?',
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                )
+              ],
+            ),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _gotoAddScreen(context),
+          tooltip: 'Add a choice',
+          child: Icon(Icons.add),
         ),
       );
     }

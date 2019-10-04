@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'stores/counter.dart'; // import the Counter
-import 'models/Choice.dart';
+import 'stores/choices.dart'; // import the Counter
 import 'ListScreen.dart';
 
-final counter = Counter(); // instantiate the store
+final store = Choices(); // instantiate the store
 
 void main() => runApp(MyApp());
 
@@ -45,15 +44,16 @@ class MyHomePage extends StatelessWidget {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return ListScreen(
-      entries: [
-        Choice(answer: "111", likelihood: 3, category: "What for lunch?"),
-        Choice(
-            answer: "Big Big Wantan",
-            likelihood: 4,
-            category: "What for lunch?"),
-        Choice(
-            answer: "Korean BBQ", likelihood: 5, category: "What for dinner?"),
-      ],
+      // entries: [
+      //   Choice(answer: "111", likelihood: 3, category: "What for lunch?"),
+      //   Choice(
+      //       answer: "Big Big Wantan",
+      //       likelihood: 4,
+      //       category: "What for lunch?"),
+      //   Choice(
+      //       answer: "Korean BBQ", likelihood: 5, category: "What for dinner?"),
+      // ],
+      entries: store.choices,
     );
   }
 }
