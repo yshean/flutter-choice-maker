@@ -87,7 +87,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
                     fontSize: 21.0,
                   )),
             ),
-            Container(height: 40.0),
+            Container(height: 42.0),
             Text(
               "How likely this answer will be selected?",
               style: TextStyle(
@@ -114,6 +114,8 @@ class _AddNewDialogState extends State<AddNewDialog> {
                 Text("Very Likely"),
               ],
             ),
+            Container(height: 14.0),
+            Text("Likelihood: ${_sliderValue}/10"),
           ],
         ),
       ),
