@@ -44,34 +44,16 @@ class MyHomePage extends StatelessWidget {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListScreen(
-          entries: [
-            Choice(answer: "111", percentage: 40, category: "What for lunch?"),
-            Choice(
-                answer: "Big Big Wantan",
-                percentage: 60,
-                category: "What for lunch?"),
-            Choice(
-                answer: "Korean BBQ",
-                percentage: 80,
-                category: "What for dinner?"),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: counter.increment,
-        tooltip: 'Add a choice',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return ListScreen(
+      entries: [
+        Choice(answer: "111", percentage: 40, category: "What for lunch?"),
+        Choice(
+            answer: "Big Big Wantan",
+            percentage: 60,
+            category: "What for lunch?"),
+        Choice(
+            answer: "Korean BBQ", percentage: 80, category: "What for dinner?"),
+      ],
     );
   }
 }

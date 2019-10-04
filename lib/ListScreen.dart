@@ -1,3 +1,4 @@
+import 'package:choice_maker/AddNewDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -10,6 +11,7 @@ class ListScreen extends StatelessWidget {
   final List<Choice> entries;
   final Map _result = {};
 
+  // TODO: Below need to run on every change to data (e.g. after adding, editing, or deleting)
   ListScreen({Key key, this.entries}) {
     // Create a set of (unique) categories
     Set categories = Set.from(entries.map((v) => v.category));
@@ -33,6 +35,20 @@ class ListScreen extends StatelessWidget {
 
   _gotoAddScreen(BuildContext context) async {
     print("go to add screen");
+    final data = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddNewDialog()),
+    ) as Choice;
+
+    if (data != null) {
+      // Utils.showPopup(context, 'INFO', '${data.name} saved successfully!');
+      print('${data.answer} saved successfully!');
+
+      // entries = await userSrv.getListPwds();
+      // setState(() {
+      //   filteredEntries = entries;
+      // });
+    }
   }
 
   List<Widget> _buildList(String category) {
@@ -96,22 +112,36 @@ class ListScreen extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-        itemCount: _result.keys.length,
-        itemBuilder: (BuildContext context, int index) {
-          var category = _result.keys.toList()[index];
-          return StickyHeader(
-              header: Container(
-                height: 40.0,
-                color: Colors.grey.shade100,
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  category,
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ),
-              content: Column(children: _buildList(category)));
-        });
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text("Choice List"),
+      ),
+      body: Center(
+        child: ListView.builder(
+            itemCount: _result.keys.length,
+            itemBuilder: (BuildContext context, int index) {
+              var category = _result.keys.toList()[index];
+              return StickyHeader(
+                  header: Container(
+                    height: 40.0,
+                    color: Colors.grey.shade100,
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      category,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ),
+                  content: Column(children: _buildList(category)));
+            }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _gotoAddScreen(context),
+        tooltip: 'Add a choice',
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }
