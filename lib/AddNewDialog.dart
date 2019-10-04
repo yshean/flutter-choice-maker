@@ -11,6 +11,7 @@ class AddNewDialog extends StatefulWidget {
 
 class _AddNewDialogState extends State<AddNewDialog> {
   double _sliderValue = 5.0;
+
   static List<DropdownMenuItem> _dropdownMenuItems = [
     DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),
     DropdownMenuItem(

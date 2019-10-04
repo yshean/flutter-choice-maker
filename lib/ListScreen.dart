@@ -10,6 +10,7 @@ import 'ChoiceRowWidget.dart';
 class ListScreen extends StatelessWidget {
   final List<Choice> entries;
   final Map _result = {};
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   // TODO: Below need to run on every change to data (e.g. after adding, editing, or deleting)
   ListScreen({Key key, this.entries}) {
@@ -43,6 +44,9 @@ class ListScreen extends StatelessWidget {
     if (data != null) {
       // Utils.showPopup(context, 'INFO', '${data.name} saved successfully!');
       print('${data.answer} saved successfully!');
+
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text('${data.answer} saved successfully!')));
 
       // entries = await userSrv.getListPwds();
       // setState(() {
@@ -113,6 +117,7 @@ class ListScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -121,7 +126,7 @@ class ListScreen extends StatelessWidget {
       body: Center(
         child: ListView.builder(
             itemCount: _result.keys.length,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (BuildContext ctx, int index) {
               var category = _result.keys.toList()[index];
               return StickyHeader(
                   header: Container(
