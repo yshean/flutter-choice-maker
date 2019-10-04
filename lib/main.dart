@@ -55,9 +55,15 @@ class MyHomePage extends StatelessWidget {
         // in the middle of the parent.
         child: ListScreen(
           entries: [
-            Choice(answer: "YS", percentage: 99.0, category: "A"),
-            Choice(answer: "Carbon", percentage: 60.0, category: "B"),
-            Choice(answer: "Ferrick", percentage: 80.0, category: "A"),
+            Choice(answer: "111", percentage: 40, category: "What for lunch?"),
+            Choice(
+                answer: "Big Big Wantan",
+                percentage: 60,
+                category: "What for lunch?"),
+            Choice(
+                answer: "Korean BBQ",
+                percentage: 80,
+                category: "What for dinner?"),
           ],
         ),
       ),

@@ -21,7 +21,7 @@ class ChoiceRowWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 choiceEntry.answer,
-                style: Theme.of(context).textTheme.body1,
+                style: Theme.of(context).textTheme.subtitle,
               ),
             ),
           ),
@@ -30,8 +30,8 @@ class ChoiceRowWidget extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                choiceEntry.percentage.toString(),
-                style: Theme.of(context).textTheme.subtitle,
+                '${(choiceEntry.percentage / 10).toString()}/10',
+                style: Theme.of(context).textTheme.body1,
               ),
             ),
           ),

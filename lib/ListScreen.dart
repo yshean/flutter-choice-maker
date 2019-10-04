@@ -18,6 +18,9 @@ class ListScreen extends StatelessWidget {
     // use contains() to check if item belongs to the category
     Set categories = new Set.from(entries.map((v) => v.category));
 
+    // Sort entries according to percentage
+    entries.sort((Choice a, Choice b) => b.percentage.compareTo(a.percentage));
+
     for (var cat in categories) {
       result[cat] = entries.where((entry) => (entry.category == cat));
     }
