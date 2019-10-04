@@ -1,7 +1,9 @@
 import 'package:choice_maker/AddNewDialog.dart';
+import 'package:choice_maker/stores/choices.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 // import 'PwdRowWidget.dart';
 import 'models/Choice.dart';
@@ -34,7 +36,7 @@ class ListScreen extends StatelessWidget {
     print("btn delete" + id);
   }
 
-  _gotoAddScreen(BuildContext context) async {
+  _gotoAddScreen(BuildContext context, addChoice) async {
     print("go to add screen");
     final data = await Navigator.push(
       context,
@@ -43,6 +45,8 @@ class ListScreen extends StatelessWidget {
 
     if (data != null) {
       // Utils.showPopup(context, 'INFO', '${data.name} saved successfully!');
+      addChoice(data);
+
       print('${data.answer} saved successfully!');
 
       _scaffoldKey.currentState.showSnackBar(
@@ -96,6 +100,8 @@ class ListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Choices choices = Provider.of<Choices>(context);
+
     if (entries.length == 0) {
       return Scaffold(
         key: _scaffoldKey,
@@ -122,7 +128,7 @@ class ListScreen extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _gotoAddScreen(context),
+          onPressed: () => _gotoAddScreen(context, choices.addChoice),
           tooltip: 'Add a choice',
           child: Icon(Icons.add),
         ),
@@ -156,7 +162,7 @@ class ListScreen extends StatelessWidget {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _gotoAddScreen(context),
+        onPressed: () => _gotoAddScreen(context, choices.addChoice),
         tooltip: 'Add a choice',
         child: Icon(Icons.add),
       ),
