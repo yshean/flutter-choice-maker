@@ -11,6 +11,8 @@ class AddNewDialog extends StatefulWidget {
 
 class _AddNewDialogState extends State<AddNewDialog> {
   double _sliderValue = 5.0;
+  String selectedQuestion = "What's for lunch";
+  String answer;
 
   static List<DropdownMenuItem> _dropdownMenuItems = [
     DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),
@@ -30,9 +32,9 @@ class _AddNewDialogState extends State<AddNewDialog> {
               Navigator.pop(
                   context,
                   Choice(
-                      answer: "Bintang",
-                      percentage: 50,
-                      category: "What for lunch?"));
+                      answer: answer,
+                      percentage: _sliderValue,
+                      category: selectedQuestion));
             },
             child: Text("Save"),
           ),
@@ -78,6 +80,11 @@ class _AddNewDialogState extends State<AddNewDialog> {
             ),
             Container(height: 14.0),
             TextField(
+              onChanged: (value) {
+                setState(() {
+                  answer = value;
+                });
+              },
               autofocus: true,
               decoration: InputDecoration(
                   // border: InputBorder.none,
