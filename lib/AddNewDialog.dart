@@ -10,7 +10,7 @@ class AddNewDialog extends StatefulWidget {
 }
 
 class _AddNewDialogState extends State<AddNewDialog> {
-  double _sliderValue = 5.0;
+  double _sliderValue = 3.0;
   String selectedQuestion = "What's for lunch";
   String answer;
 
@@ -33,7 +33,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
                   context,
                   Choice(
                       answer: answer,
-                      percentage: _sliderValue,
+                      likelihood: _sliderValue.toInt(),
                       category: selectedQuestion));
             },
             child: Text("Save"),
@@ -106,12 +106,12 @@ class _AddNewDialogState extends State<AddNewDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text("Unlikely"),
+                Text("Very Unlikely"),
                 Expanded(
                   child: Slider(
-                    min: 0.0,
-                    max: 10.0,
-                    divisions: 10,
+                    min: 1.0,
+                    max: 5.0,
+                    divisions: 4,
                     onChanged: (value) {
                       setState(() => _sliderValue = value);
                     },
@@ -122,7 +122,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
               ],
             ),
             Container(height: 14.0),
-            Text("Likelihood: ${_sliderValue}/10"),
+            Text("Likelihood: ${_sliderValue.toInt()}/5"),
           ],
         ),
       ),

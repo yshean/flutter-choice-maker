@@ -17,8 +17,8 @@ class ListScreen extends StatelessWidget {
     // Create a set of (unique) categories
     Set categories = Set.from(entries.map((v) => v.category));
 
-    // Sort entries according to percentage
-    entries.sort((Choice a, Choice b) => b.percentage.compareTo(a.percentage));
+    // Sort entries according to likelihood
+    entries.sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
 
     for (var cat in categories) {
       _result[cat] = entries.where((entry) => (entry.category == cat));

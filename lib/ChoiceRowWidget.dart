@@ -30,7 +30,7 @@ class ChoiceRowWidget extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '${(choiceEntry.percentage / 10).toString()}/10',
+                '${(choiceEntry.likelihood).toString()}/5',
                 style: Theme.of(context).textTheme.body1,
               ),
             ),

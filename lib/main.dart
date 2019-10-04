@@ -46,13 +46,13 @@ class MyHomePage extends StatelessWidget {
     // than having to individually change instances of widgets.
     return ListScreen(
       entries: [
-        Choice(answer: "111", percentage: 40, category: "What for lunch?"),
+        Choice(answer: "111", likelihood: 3, category: "What for lunch?"),
         Choice(
             answer: "Big Big Wantan",
-            percentage: 60,
+            likelihood: 4,
             category: "What for lunch?"),
         Choice(
-            answer: "Korean BBQ", percentage: 80, category: "What for dinner?"),
+            answer: "Korean BBQ", likelihood: 5, category: "What for dinner?"),
       ],
     );
   }

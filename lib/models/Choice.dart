@@ -6,9 +6,9 @@ class Choice {
   String id;
   String category;
   String answer;
-  double percentage;
+  int likelihood;
 
-  Choice({this.category, this.answer, this.percentage}) {
+  Choice({this.category, this.answer, this.likelihood}) {
     this.id = uuid.v4();
   }
 }
