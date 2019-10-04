@@ -8,21 +8,17 @@ import 'ChoiceRowWidget.dart';
 
 class ListScreen extends StatelessWidget {
   final List<Choice> entries;
-  final List<Choice> filteredEntries = [];
-
-  Map result = {};
-  List<Widget> finalList = [Text("Hello")];
+  final Map _result = {};
 
   ListScreen({Key key, this.entries}) {
-    // loop through categories
-    // use contains() to check if item belongs to the category
-    Set categories = new Set.from(entries.map((v) => v.category));
+    // Create a set of (unique) categories
+    Set categories = Set.from(entries.map((v) => v.category));
 
     // Sort entries according to percentage
     entries.sort((Choice a, Choice b) => b.percentage.compareTo(a.percentage));
 
     for (var cat in categories) {
-      result[cat] = entries.where((entry) => (entry.category == cat));
+      _result[cat] = entries.where((entry) => (entry.category == cat));
     }
   }
 
@@ -40,12 +36,12 @@ class ListScreen extends StatelessWidget {
   }
 
   List<Widget> _buildList(String category) {
-    List<Widget> arr = new List<Widget>();
+    List<Widget> arr = List<Widget>();
     // var resKeys = result.keys.toList();
 
     // for (var category in resKeys) {
-    for (var i = 0; i < result[category].length; i++) {
-      var choice = result[category].toList()[i];
+    for (var i = 0; i < _result[category].length; i++) {
+      var choice = _result[category].toList()[i];
       arr.add(GestureDetector(
           child: Slidable(
         key: ValueKey(choice.id),
@@ -101,14 +97,14 @@ class ListScreen extends StatelessWidget {
     }
 
     return ListView.builder(
-        itemCount: result.keys.length,
+        itemCount: _result.keys.length,
         itemBuilder: (BuildContext context, int index) {
-          var category = result.keys.toList()[index];
+          var category = _result.keys.toList()[index];
           return StickyHeader(
               header: Container(
                 height: 40.0,
                 color: Colors.grey.shade100,
-                padding: new EdgeInsets.symmetric(horizontal: 15.0),
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   category,

@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-var uuid = new Uuid();
+var uuid = Uuid();
 
 class Choice {
   String id;
