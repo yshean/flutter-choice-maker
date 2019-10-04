@@ -38,7 +38,91 @@ class _AddNewDialogState extends State<AddNewDialog> {
           ),
         ],
       ),
-      body: Padding(
+      body: Container(
+        constraints: BoxConstraints.expand(),
+        padding: EdgeInsets.symmetric(horizontal: 36.0, vertical: 36.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: <Widget>[
+                Text(
+                  "Question: ",
+                  style: TextStyle(
+                      color: Colors.black38,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.0),
+                ),
+                Container(width: 16.0),
+                Expanded(
+                  child: DropdownButton(
+                    isExpanded: true,
+                    value: _selectedCategory,
+                    items: _dropdownMenuItems,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Container(height: 32.0),
+            Text(
+              "What is your answer?",
+              style: TextStyle(
+                  color: Colors.black38,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0),
+            ),
+            Container(height: 14.0),
+            TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                  // border: InputBorder.none,
+                  hintText: 'Your Answer...',
+                  hintStyle: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 21.0,
+                  )),
+            ),
+            Container(height: 40.0),
+            Text(
+              "How likely this answer will be selected?",
+              style: TextStyle(
+                  color: Colors.black38,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0),
+            ),
+            Container(height: 14.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text("Unlikely"),
+                Expanded(
+                  child: Slider(
+                    min: 0.0,
+                    max: 10.0,
+                    divisions: 10,
+                    onChanged: (value) {
+                      setState(() => _sliderValue = value);
+                    },
+                    value: _sliderValue,
+                  ),
+                ),
+                Text("Very Likely"),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
+Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
@@ -93,6 +177,19 @@ class _AddNewDialogState extends State<AddNewDialog> {
           ],
         ),
       ),
-    );
-  }
-}
+*/
+
+/*
+IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text("hello"),
+                          );
+                        });
+                  },
+                ),
+*/
