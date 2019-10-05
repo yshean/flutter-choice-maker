@@ -12,9 +12,7 @@ import 'ChoiceRowWidget.dart';
 class ListScreen extends StatelessWidget {
   final List<Choice> entries;
   final Map _result = {};
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  // TODO: Below need to run on every change to data (e.g. after adding, editing, or deleting)
   ListScreen({Key key, this.entries}) {
     // Create a set of (unique) categories
     Set categories = Set.from(entries.map((v) => v.category));
@@ -28,8 +26,18 @@ class ListScreen extends StatelessWidget {
   }
 
   // need to replace index with the item ID (need to be created)
-  void btnLaunchTouched(String id) async {
-    print("btn launch" + id);
+  void btnEditTouched(BuildContext context, String id) async {
+    print("btn edit" + id);
+    // similar to add
+    // but populate the selected id's data
+
+    final data = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddNewDialog(id: id)),
+    ) as Choice;
+    if (data != null) {
+      print('Id ${data.id} was edited!');
+    }
   }
 
   void btnDeleteTouched(String id) async {
@@ -45,13 +53,8 @@ class ListScreen extends StatelessWidget {
 
     if (data != null) {
       // Utils.showPopup(context, 'INFO', '${data.name} saved successfully!');
+      print('${data.answer} of id ${data.id} is saved successfully!');
       addChoice(data);
-
-      print('${data.answer} saved successfully!');
-
-      _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text('${data.answer} saved successfully!')));
-
       // entries = await userSrv.getListPwds();
       // setState(() {
       //   filteredEntries = entries;
@@ -59,7 +62,7 @@ class ListScreen extends StatelessWidget {
     }
   }
 
-  List<Widget> _buildList(String category) {
+  List<Widget> _buildList(BuildContext context, String category) {
     List<Widget> arr = List<Widget>();
     // var resKeys = result.keys.toList();
 
@@ -75,7 +78,7 @@ class ListScreen extends StatelessWidget {
             caption: 'Edit',
             color: Colors.indigo,
             icon: Icons.edit,
-            onTap: () => btnLaunchTouched(choice.id),
+            onTap: () => btnEditTouched(context, choice.id),
           ),
         ],
         secondaryActions: <Widget>[
@@ -102,65 +105,50 @@ class ListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Choices choices = Provider.of<Choices>(context);
 
-    if (entries.length == 0) {
-      return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text("Choice List"),
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
-            child: Column(
-              children: <Widget>[
-                Image.asset('assets/images/no_entries.png'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Nothing here yet. Add one?',
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _gotoAddScreen(context, choices.addChoice),
-          tooltip: 'Add a choice',
-          child: Icon(Icons.add),
-        ),
-      );
-    }
-
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text("Choice List"),
       ),
-      body: Center(
-        child: ListView.builder(
-            itemCount: _result.keys.length,
-            itemBuilder: (BuildContext ctx, int index) {
-              var category = _result.keys.toList()[index];
-              return StickyHeader(
-                  header: Container(
-                    height: 40.0,
-                    color: Colors.grey.shade100,
-                    padding: EdgeInsets.symmetric(horizontal: 15.0),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      category,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
-                  ),
-                  content: Column(children: _buildList(category)));
-            }),
-      ),
+      body: entries.length == 0
+          ? Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+                child: Column(
+                  children: <Widget>[
+                    Image.asset('assets/images/no_entries.png'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        'Nothing here yet. Add one?',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          : Center(
+              child: ListView.builder(
+                  itemCount: _result.keys.length,
+                  itemBuilder: (BuildContext ctx, int index) {
+                    var category = _result.keys.toList()[index];
+                    return StickyHeader(
+                        header: Container(
+                          height: 40.0,
+                          color: Colors.grey.shade100,
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            category,
+                            style: Theme.of(context).textTheme.body1,
+                          ),
+                        ),
+                        content:
+                            Column(children: _buildList(context, category)));
+                  }),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _gotoAddScreen(context, choices.addChoice),
         tooltip: 'Add a choice',

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models/Choice.dart';
 
+var uuid = Uuid();
+
 class AddNewDialog extends StatefulWidget {
-  const AddNewDialog({Key key});
+  // final String id = uuid.v4();
+  final String id;
+
+  const AddNewDialog({Key key, this.id});
 
   @override
   _AddNewDialogState createState() => _AddNewDialogState();
@@ -11,18 +17,26 @@ class AddNewDialog extends StatefulWidget {
 
 class _AddNewDialogState extends State<AddNewDialog> {
   double _sliderValue = 3.0;
-  String selectedQuestion = "What's for lunch";
-  String answer;
+  String _answer;
 
   static List<DropdownMenuItem> _dropdownMenuItems = [
     DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),
     DropdownMenuItem(
         value: "What for dinner?", child: Text("What for dinner?")),
   ];
-  String _selectedCategory = _dropdownMenuItems[0].value;
+  String _selectedQuestion = _dropdownMenuItems[0].value;
+
+  // if widget.id == null, then it's adding new entry
+  // else, it's editing existing entry
 
   @override
   Widget build(BuildContext context) {
+    if (widget.id == null) {
+      print("Add new");
+    } else {
+      print("Edit existing");
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("New Choice"),
@@ -32,9 +46,11 @@ class _AddNewDialogState extends State<AddNewDialog> {
               Navigator.pop(
                   context,
                   Choice(
-                      answer: answer,
-                      likelihood: _sliderValue.toInt(),
-                      category: selectedQuestion));
+                    answer: _answer,
+                    likelihood: _sliderValue.toInt(),
+                    category: _selectedQuestion,
+                    id: widget.id == null ? uuid.v4() : widget.id,
+                  ));
             },
             child: Text("Save"),
           ),
@@ -59,11 +75,11 @@ class _AddNewDialogState extends State<AddNewDialog> {
                 Expanded(
                   child: DropdownButton(
                     isExpanded: true,
-                    value: _selectedCategory,
+                    value: _selectedQuestion,
                     items: _dropdownMenuItems,
                     onChanged: (value) {
                       setState(() {
-                        _selectedCategory = value;
+                        _selectedQuestion = value;
                       });
                     },
                   ),
@@ -82,7 +98,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
             TextField(
               onChanged: (value) {
                 setState(() {
-                  answer = value;
+                  _answer = value;
                 });
               },
               autofocus: true,

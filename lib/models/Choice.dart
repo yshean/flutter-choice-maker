@@ -1,6 +1,6 @@
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
-var uuid = Uuid();
+// var uuid = Uuid();
 
 class Choice {
   String id;
@@ -8,7 +8,7 @@ class Choice {
   String answer;
   int likelihood;
 
-  Choice({this.category, this.answer, this.likelihood}) {
-    this.id = uuid.v4();
+  Choice({this.id, this.category, this.answer, this.likelihood}) {
+    // this.id = uuid.v4();
   }
 }
