@@ -144,6 +144,11 @@ class ListScreen extends StatelessWidget {
                     itemCount: choices.choicesMap.keys.length,
                     itemBuilder: (BuildContext ctx, int index) {
                       var category = choices.choicesMap.keys.toList()[index];
+                      var catItems = choices.choices
+                          .where((ch) => ch.category == category);
+                      if (catItems.length == 0) {
+                        return SizedBox.shrink();
+                      }
                       return StickyHeader(
                           header: Container(
                             height: 40.0,

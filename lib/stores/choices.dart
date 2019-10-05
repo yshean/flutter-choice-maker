@@ -22,10 +22,11 @@ class Choices = _Choices with _$Choices;
 abstract class _Choices with Store {
   // The @observable annotation marks the value as observable
   @observable
-  List<Choice> choices = [];
+  ObservableList<Choice> choices = ObservableList<Choice>();
 
   @observable
-  Map<String, List<Choice>> choicesMap = {};
+  ObservableMap<String, ObservableList<Choice>> choicesMap =
+      ObservableMap<String, ObservableList<Choice>>();
 
   // @computed
   // compute the map of {id: choice}
@@ -39,8 +40,14 @@ abstract class _Choices with Store {
     choices.sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
 
     for (var cat in categories) {
-      choicesMap[cat] =
-          List<Choice>.from(choices.where((entry) => (entry.category == cat)));
+      // var normalList =
+      //     List<Choice>.from(choices.where((entry) => (entry.category == cat)));
+      // var newObList = ObservableList<Choice>();
+      // newObList.addAll(normalList);
+      // choicesMap[cat] = newObList;
+
+      choicesMap[cat] = ObservableList<Choice>.of(
+          choices.where((entry) => (entry.category == cat)));
     }
   }
 

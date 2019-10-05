@@ -12,14 +12,14 @@ mixin _$Choices on _Choices, Store {
   final _$choicesAtom = Atom(name: '_Choices.choices');
 
   @override
-  List<Choice> get choices {
+  ObservableList<Choice> get choices {
     _$choicesAtom.context.enforceReadPolicy(_$choicesAtom);
     _$choicesAtom.reportObserved();
     return super.choices;
   }
 
   @override
-  set choices(List<Choice> value) {
+  set choices(ObservableList<Choice> value) {
     _$choicesAtom.context.conditionallyRunInAction(() {
       super.choices = value;
       _$choicesAtom.reportChanged();
@@ -29,14 +29,14 @@ mixin _$Choices on _Choices, Store {
   final _$choicesMapAtom = Atom(name: '_Choices.choicesMap');
 
   @override
-  Map<String, List<Choice>> get choicesMap {
+  ObservableMap<String, ObservableList<Choice>> get choicesMap {
     _$choicesMapAtom.context.enforceReadPolicy(_$choicesMapAtom);
     _$choicesMapAtom.reportObserved();
     return super.choicesMap;
   }
 
   @override
-  set choicesMap(Map<String, List<Choice>> value) {
+  set choicesMap(ObservableMap<String, ObservableList<Choice>> value) {
     _$choicesMapAtom.context.conditionallyRunInAction(() {
       super.choicesMap = value;
       _$choicesMapAtom.reportChanged();
