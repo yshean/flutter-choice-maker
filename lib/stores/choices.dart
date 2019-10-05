@@ -22,16 +22,22 @@ class Choices = _Choices with _$Choices;
 abstract class _Choices with Store {
   // The @observable annotation marks the value as observable
   @observable
-  List<Choice> choices = [
-    // Choice(answer: "111", likelihood: 3, category: "What for lunch?"),
-    // Choice(
-    //     answer: "Big Small Wantan", likelihood: 4, category: "What for lunch?"),
-    // Choice(answer: "Korean BBQ", likelihood: 5, category: "What for dinner?"),
-  ];
+  List<Choice> choices = [];
+  Map<String, Choice> choicesMap = {};
+
+  // @computed
+  // compute the map of {id: choice}
 
   // Use of @action annotation marks the increment() method as an action
   @action
   void addChoice(Choice choice) {
     choices.add(choice);
+  }
+
+  @action
+  void editChoice(Choice choice) {
+    // TODO: use map instead
+    final editIndex = choices.indexWhere((ch) => ch.id == choice.id);
+    choices[editIndex] = choice;
   }
 }

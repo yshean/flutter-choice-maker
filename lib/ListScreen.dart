@@ -26,7 +26,7 @@ class ListScreen extends StatelessWidget {
   }
 
   // need to replace index with the item ID (need to be created)
-  void btnEditTouched(BuildContext context, String id) async {
+  void btnEditTouched(BuildContext context, String id, editChoice) async {
     print("btn edit" + id);
     // similar to add
     // but populate the selected id's data
@@ -37,6 +37,7 @@ class ListScreen extends StatelessWidget {
     ) as Choice;
     if (data != null) {
       print('Id ${data.id} was edited!');
+      editChoice(data);
     }
   }
 
@@ -62,7 +63,7 @@ class ListScreen extends StatelessWidget {
     }
   }
 
-  List<Widget> _buildList(BuildContext context, String category) {
+  List<Widget> _buildList(BuildContext context, String category, editChoice) {
     List<Widget> arr = List<Widget>();
     // var resKeys = result.keys.toList();
 
@@ -78,7 +79,7 @@ class ListScreen extends StatelessWidget {
             caption: 'Edit',
             color: Colors.indigo,
             icon: Icons.edit,
-            onTap: () => btnEditTouched(context, choice.id),
+            onTap: () => btnEditTouched(context, choice.id, editChoice),
           ),
         ],
         secondaryActions: <Widget>[
@@ -145,8 +146,9 @@ class ListScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.body1,
                           ),
                         ),
-                        content:
-                            Column(children: _buildList(context, category)));
+                        content: Column(
+                            children: _buildList(
+                                context, category, choices.editChoice)));
                   }),
             ),
       floatingActionButton: FloatingActionButton(
