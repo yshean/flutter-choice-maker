@@ -23,21 +23,60 @@ abstract class _Choices with Store {
   // The @observable annotation marks the value as observable
   @observable
   List<Choice> choices = [];
-  Map<String, Choice> choicesMap = {};
+
+  @observable
+  Map<String, List<Choice>> choicesMap = {};
 
   // @computed
   // compute the map of {id: choice}
+
+  void _processResult() {
+    print("Run _processResult()");
+    // Create a set of (unique) categories
+    Set categories = Set.from(choices.map((v) => v.category));
+
+    // Sort entries according to likelihood
+    choices.sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
+
+    for (var cat in categories) {
+      choicesMap[cat] =
+          List<Choice>.from(choices.where((entry) => (entry.category == cat)));
+    }
+  }
+
+  // @computed
+  // Map<String, List<Choice>> get allChoices {
+  //   print("Run get allChoices");
+  //   return choicesMap;
+  // }
+
+  // @computed
+  // List<Choice> get allChoicesList {
+  //   print("Run get allChoicesList");
+  //   return choices;
+  // }
 
   // Use of @action annotation marks the increment() method as an action
   @action
   void addChoice(Choice choice) {
     choices.add(choice);
+    _processResult();
   }
 
   @action
   void editChoice(Choice choice) {
     // TODO: use map instead
+    print("Editing " + choice.id);
     final editIndex = choices.indexWhere((ch) => ch.id == choice.id);
     choices[editIndex] = choice;
+    _processResult();
+  }
+
+  @action
+  void deleteChoice(String id) {
+    print("Deleting " + id);
+    choices.removeWhere((item) => item.id == id);
+    print("[Store] Choices Length: " + choices.length.toString());
+    _processResult();
   }
 }

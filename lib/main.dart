@@ -12,8 +12,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<Choices>.value(
-      value: store,
+    return Provider<Choices>(
+      builder: (_) => Choices(),
       child: MaterialApp(
         title: 'Decision Maker',
         theme: ThemeData(
@@ -41,24 +41,12 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Choices choices = Provider.of<Choices>(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return ListScreen(
-      // entries: [
-      //   Choice(answer: "111", likelihood: 3, category: "What for lunch?"),
-      //   Choice(
-      //       answer: "Big Big Wantan",
-      //       likelihood: 4,
-      //       category: "What for lunch?"),
-      //   Choice(
-      //       answer: "Korean BBQ", likelihood: 5, category: "What for dinner?"),
-      // ],
-      entries: choices.choices,
-    );
+    return ListScreen();
   }
 }

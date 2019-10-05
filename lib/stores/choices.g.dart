@@ -26,6 +26,23 @@ mixin _$Choices on _Choices, Store {
     }, _$choicesAtom, name: '${_$choicesAtom.name}_set');
   }
 
+  final _$choicesMapAtom = Atom(name: '_Choices.choicesMap');
+
+  @override
+  Map<String, List<Choice>> get choicesMap {
+    _$choicesMapAtom.context.enforceReadPolicy(_$choicesMapAtom);
+    _$choicesMapAtom.reportObserved();
+    return super.choicesMap;
+  }
+
+  @override
+  set choicesMap(Map<String, List<Choice>> value) {
+    _$choicesMapAtom.context.conditionallyRunInAction(() {
+      super.choicesMap = value;
+      _$choicesMapAtom.reportChanged();
+    }, _$choicesMapAtom, name: '${_$choicesMapAtom.name}_set');
+  }
+
   final _$_ChoicesActionController = ActionController(name: '_Choices');
 
   @override
@@ -33,6 +50,26 @@ mixin _$Choices on _Choices, Store {
     final _$actionInfo = _$_ChoicesActionController.startAction();
     try {
       return super.addChoice(choice);
+    } finally {
+      _$_ChoicesActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void editChoice(Choice choice) {
+    final _$actionInfo = _$_ChoicesActionController.startAction();
+    try {
+      return super.editChoice(choice);
+    } finally {
+      _$_ChoicesActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void deleteChoice(String id) {
+    final _$actionInfo = _$_ChoicesActionController.startAction();
+    try {
+      return super.deleteChoice(id);
     } finally {
       _$_ChoicesActionController.endAction(_$actionInfo);
     }

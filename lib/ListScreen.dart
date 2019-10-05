@@ -1,6 +1,8 @@
 import 'package:choice_maker/AddNewDialog.dart';
 import 'package:choice_maker/stores/choices.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -10,24 +12,8 @@ import 'models/Choice.dart';
 import 'ChoiceRowWidget.dart';
 
 class ListScreen extends StatelessWidget {
-  final List<Choice> entries;
-  final Map _result = {};
-
-  ListScreen({Key key, this.entries}) {
-    // Create a set of (unique) categories
-    Set categories = Set.from(entries.map((v) => v.category));
-
-    // Sort entries according to likelihood
-    entries.sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
-
-    for (var cat in categories) {
-      _result[cat] = entries.where((entry) => (entry.category == cat));
-    }
-  }
-
-  // need to replace index with the item ID (need to be created)
   void btnEditTouched(BuildContext context, Choice choice, editChoice) async {
-    print("btn edit" + choice.id);
+    print("btn edit " + choice.id);
     // similar to add
     // but populate the selected id's data
 
@@ -41,8 +27,11 @@ class ListScreen extends StatelessWidget {
     }
   }
 
-  void btnDeleteTouched(String id) async {
-    print("btn delete" + id);
+  void btnDeleteTouched(Choice choice, deleteChoice) {
+    print("btn delete " + choice.id);
+    deleteChoice(choice.id);
+    // choices.removeWhere((item) => item.id == choice.id);
+    // setState(() {});
   }
 
   _gotoAddScreen(BuildContext context, addChoice) async {
@@ -63,13 +52,14 @@ class ListScreen extends StatelessWidget {
     }
   }
 
-  List<Widget> _buildList(BuildContext context, String category, editChoice) {
+  List<Widget> _buildList(BuildContext context, String category, editChoice,
+      Map<String, List<Choice>> result, deleteChoice) {
     List<Widget> arr = List<Widget>();
     // var resKeys = result.keys.toList();
 
     // for (var category in resKeys) {
-    for (var i = 0; i < _result[category].length; i++) {
-      var choice = _result[category].toList()[i];
+    for (var i = 0; i < result[category].length; i++) {
+      Choice choice = result[category][i];
       arr.add(GestureDetector(
           child: Slidable(
         key: ValueKey(choice.id),
@@ -87,7 +77,7 @@ class ListScreen extends StatelessWidget {
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
-            onTap: () => btnDeleteTouched(choice.id),
+            onTap: () => btnDeleteTouched(choice, deleteChoice),
           ),
         ],
         dismissal: SlidableDismissal(
@@ -105,56 +95,82 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Choices choices = Provider.of<Choices>(context);
+    print("Choices length: " + choices.choices.length.toString());
 
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("Choice List"),
-      ),
-      body: entries.length == 0
-          ? Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
-                child: Column(
-                  children: <Widget>[
-                    Image.asset('assets/images/no_entries.png'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        'Nothing here yet. Add one?',
-                        style: Theme.of(context).textTheme.title,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          : Center(
-              child: ListView.builder(
-                  itemCount: _result.keys.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    var category = _result.keys.toList()[index];
-                    return StickyHeader(
-                        header: Container(
-                          height: 40.0,
-                          color: Colors.grey.shade100,
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            category,
-                            style: Theme.of(context).textTheme.body1,
-                          ),
+    // autorun((_) {
+    //   print("Run autorun");
+    //   // Create a set of (unique) categories
+    //   Set categories = Set.from(choices.choices.map((v) => v.category));
+
+    //   // Sort entries according to likelihood
+    //   choices.choices
+    //       .sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
+
+    //   for (var cat in categories) {
+    //     choices.choicesMap[cat] = List<Choice>.from(
+    //         choices.choices.where((entry) => (entry.category == cat)));
+    //   }
+
+    //   // setState(() {});
+    // });
+
+    return Observer(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text("Choice List"),
+        ),
+        body: choices.choices.length == 0
+            ? Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/images/no_entries.png'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          'Nothing here yet. Add one?',
+                          style: Theme.of(context).textTheme.title,
                         ),
-                        content: Column(
-                            children: _buildList(
-                                context, category, choices.editChoice)));
-                  }),
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _gotoAddScreen(context, choices.addChoice),
-        tooltip: 'Add a choice',
-        child: Icon(Icons.add),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : Center(
+                child: ListView.builder(
+                    itemCount: choices.choicesMap.keys.length,
+                    itemBuilder: (BuildContext ctx, int index) {
+                      var category = choices.choicesMap.keys.toList()[index];
+                      return StickyHeader(
+                          header: Container(
+                            height: 40.0,
+                            color: Colors.grey.shade100,
+                            padding: EdgeInsets.symmetric(horizontal: 15.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              category,
+                              style: Theme.of(context).textTheme.body1,
+                            ),
+                          ),
+                          content: Observer(
+                            builder: (_) => Column(
+                                children: _buildList(
+                                    context,
+                                    category,
+                                    choices.editChoice,
+                                    choices.choicesMap,
+                                    choices.deleteChoice)),
+                          ));
+                    }),
+              ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _gotoAddScreen(context, choices.addChoice),
+          tooltip: 'Add a choice',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
