@@ -7,9 +7,9 @@ var uuid = Uuid();
 
 class AddNewDialog extends StatefulWidget {
   // final String id = uuid.v4();
-  final String id;
+  final Choice choice;
 
-  const AddNewDialog({Key key, this.id});
+  const AddNewDialog({Key key, this.choice});
 
   @override
   _AddNewDialogState createState() => _AddNewDialogState();
@@ -18,6 +18,7 @@ class AddNewDialog extends StatefulWidget {
 class _AddNewDialogState extends State<AddNewDialog> {
   double _sliderValue = 3.0;
   String _answer;
+  TextEditingController _answerController = TextEditingController();
 
   static List<DropdownMenuItem> _dropdownMenuItems = [
     DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),
@@ -30,13 +31,23 @@ class _AddNewDialogState extends State<AddNewDialog> {
   // else, it's editing existing entry
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.id == null) {
+  void initState() {
+    super.initState();
+    if (widget.choice == null) {
       print("Add new");
     } else {
       print("Edit existing");
+      setState(() {
+        _sliderValue = widget.choice.likelihood.toDouble();
+        _answer = widget.choice.answer;
+        _answerController.text = widget.choice.answer;
+        _selectedQuestion = widget.choice.category;
+      });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("New Choice"),
@@ -49,7 +60,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
                     answer: _answer,
                     likelihood: _sliderValue.toInt(),
                     category: _selectedQuestion,
-                    id: widget.id == null ? uuid.v4() : widget.id,
+                    id: widget.choice == null ? uuid.v4() : widget.choice.id,
                   ));
             },
             child: Text("Save"),
@@ -99,8 +110,10 @@ class _AddNewDialogState extends State<AddNewDialog> {
               onChanged: (value) {
                 setState(() {
                   _answer = value;
+                  _answerController.text = value;
                 });
               },
+              controller: _answerController,
               autofocus: true,
               decoration: InputDecoration(
                   // border: InputBorder.none,

@@ -26,14 +26,14 @@ class ListScreen extends StatelessWidget {
   }
 
   // need to replace index with the item ID (need to be created)
-  void btnEditTouched(BuildContext context, String id, editChoice) async {
-    print("btn edit" + id);
+  void btnEditTouched(BuildContext context, Choice choice, editChoice) async {
+    print("btn edit" + choice.id);
     // similar to add
     // but populate the selected id's data
 
     final data = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddNewDialog(id: id)),
+      MaterialPageRoute(builder: (context) => AddNewDialog(choice: choice)),
     ) as Choice;
     if (data != null) {
       print('Id ${data.id} was edited!');
@@ -79,7 +79,7 @@ class ListScreen extends StatelessWidget {
             caption: 'Edit',
             color: Colors.indigo,
             icon: Icons.edit,
-            onTap: () => btnEditTouched(context, choice.id, editChoice),
+            onTap: () => btnEditTouched(context, choice, editChoice),
           ),
         ],
         secondaryActions: <Widget>[
