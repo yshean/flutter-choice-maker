@@ -9,6 +9,13 @@ part of 'choices.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Choices on _Choices, Store {
+  Computed<dynamic> _$cumulativeProbComputed;
+
+  @override
+  dynamic get cumulativeProb => (_$cumulativeProbComputed ??=
+          Computed<dynamic>(() => super.cumulativeProb))
+      .value;
+
   final _$choicesAtom = Atom(name: '_Choices.choices');
 
   @override

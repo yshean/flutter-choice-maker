@@ -97,11 +97,31 @@ abstract class _Choices with Store {
   }
 
   @computed
+  get cumulativeProb {
+    return choices.fold(0, (prev, curr) => prev + curr.likelihood);
+  }
+
+  double _normalizedProb(prob) {
+    return prob / cumulativeProb;
+  }
+
   Choice randomChoice(String category) {
     // generates a new Random object
-    final _random = new Random();
+    final random = Random();
     final currCatItems = choicesMap[category];
+    double cumulativeProb = 0;
+    double p = random.nextDouble();
 
-    return currCatItems[_random.nextInt(currCatItems.length)];
+    // for totally randomized
+    // return currCatItems[_random.nextInt(currCatItems.length)];
+
+    // for likelihood
+    for (Choice _choice in currCatItems) {
+      cumulativeProb += _normalizedProb(_choice.likelihood);
+
+      if (p <= cumulativeProb) {
+        return _choice;
+      }
+    }
   }
 }
