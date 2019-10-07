@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import "package:mobx/mobx.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -96,6 +98,10 @@ abstract class _Choices with Store {
 
   @computed
   Choice randomChoice(String category) {
-    return choicesMap[category].first;
+    // generates a new Random object
+    final _random = new Random();
+    final currCatItems = choicesMap[category];
+
+    return currCatItems[_random.nextInt(currCatItems.length)];
   }
 }

@@ -147,30 +147,46 @@ class _DecideScreenState extends State<DecideScreen>
                       ],
                     ),
                     Container(height: MediaQuery.of(context).size.height / 4),
-                    Container(
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                _showDialog();
-                              },
-                              child: GrowTransition(
-                                child: Center(
-                                  child: Text('Decide!',
-                                      style: TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w600)),
-                                ),
-                                animation: animation,
+                    choices.choicesMap[_selectedQuestion] == null
+                        ? Center(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+                              child: Column(
+                                children: <Widget>[
+                                  Image.asset('assets/images/no_entries.png'),
+                                  Text(
+                                    'Add at least a choice to the question to begin.',
+                                    style: Theme.of(context).textTheme.title,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Container(
+                            height: MediaQuery.of(context).size.height / 4,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _showDialog();
+                                    },
+                                    child: GrowTransition(
+                                      child: Center(
+                                        child: Text('Decide!',
+                                            style: TextStyle(
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      animation: animation,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                   ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _gotoListScreen(context),
