@@ -28,9 +28,6 @@ abstract class _Choices with Store {
   ObservableMap<String, ObservableList<Choice>> choicesMap =
       ObservableMap<String, ObservableList<Choice>>();
 
-  // @computed
-  // compute the map of {id: choice}
-
   void _processResult() {
     print("Run _processResult()");
     // Create a set of (unique) categories
@@ -40,30 +37,11 @@ abstract class _Choices with Store {
     choices.sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
 
     for (var cat in categories) {
-      // var normalList =
-      //     List<Choice>.from(choices.where((entry) => (entry.category == cat)));
-      // var newObList = ObservableList<Choice>();
-      // newObList.addAll(normalList);
-      // choicesMap[cat] = newObList;
-
       choicesMap[cat] = ObservableList<Choice>.of(
           choices.where((entry) => (entry.category == cat)));
     }
   }
 
-  // @computed
-  // Map<String, List<Choice>> get allChoices {
-  //   print("Run get allChoices");
-  //   return choicesMap;
-  // }
-
-  // @computed
-  // List<Choice> get allChoicesList {
-  //   print("Run get allChoicesList");
-  //   return choices;
-  // }
-
-  // Use of @action annotation marks the increment() method as an action
   @action
   void addChoice(Choice choice) {
     choices.add(choice);
@@ -72,7 +50,6 @@ abstract class _Choices with Store {
 
   @action
   void editChoice(Choice choice) {
-    // TODO: use map instead
     print("Editing " + choice.id);
     final editIndex = choices.indexWhere((ch) => ch.id == choice.id);
     choices[editIndex] = choice;
