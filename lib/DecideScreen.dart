@@ -2,8 +2,10 @@ import 'package:choice_maker/ListScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 import 'stores/choices.dart';
+import 'models/Choice.dart';
 
 class GrowTransition extends StatelessWidget {
   GrowTransition({this.child, this.animation});
@@ -37,13 +39,8 @@ class _DecideScreenState extends State<DecideScreen>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
-
-  static List<DropdownMenuItem> _dropdownMenuItems = [
-    DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),
-    DropdownMenuItem(
-        value: "What for dinner?", child: Text("What for dinner?")),
-  ];
-  String _selectedQuestion = _dropdownMenuItems[0].value;
+  String _selectedQuestion;
+  var received;
 
   @override
   void initState() {
@@ -59,12 +56,44 @@ class _DecideScreenState extends State<DecideScreen>
         }
       });
     controller.forward();
+    // setState(() {
+    //   _selectedQuestion = _getDropdownMenuItems().first.value;
+    // });
   }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  List<DropdownMenuItem> _getDropdownMenuItems() {
+    final Choices choices = Provider.of<Choices>(context);
+    final categories = choices.choicesMap.keys;
+    List<DropdownMenuItem> result = List<DropdownMenuItem>.from(categories
+        .map((String cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+        .toList());
+
+    return result;
+  }
+
+  randomChoice(choicesMap, cumulativeProb, String category) {
+    final random = Random();
+    final currCatItems = choicesMap[category];
+    double cumulativeProb = 0;
+    double p = random.nextDouble();
+
+    // for totally randomized
+    // return currCatItems[_random.nextInt(currCatItems.length)];
+
+    // for likelihood
+    for (Choice _choice in currCatItems) {
+      cumulativeProb += _choice.likelihood / cumulativeProb;
+
+      if (p <= cumulativeProb) {
+        return _choice;
+      }
+    }
   }
 
   void _showDialog() {
@@ -75,7 +104,9 @@ class _DecideScreenState extends State<DecideScreen>
         builder: (context) {
           return AlertDialog(
             title: Text("You should go for..."),
-            content: Text(choices.randomChoice(_selectedQuestion).answer),
+            content: Text(randomChoice(choices.choicesMap,
+                    choices.cumulativeProb, _selectedQuestion)
+                .answer),
             actions: <Widget>[
               FlatButton(
                 child: Text("OK"),
@@ -92,9 +123,9 @@ class _DecideScreenState extends State<DecideScreen>
   Widget build(BuildContext context) {
     final Choices choices = Provider.of<Choices>(context);
 
-    _gotoListScreen(BuildContext context) async {
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ListScreen()));
+    _gotoListScreen(BuildContext ctx) async {
+      await Navigator.push(ctx, MaterialPageRoute(builder: (_) => ListScreen()))
+          .then((_) => {this.setState(() {})});
     }
 
     return Observer(
@@ -135,7 +166,11 @@ class _DecideScreenState extends State<DecideScreen>
                           child: DropdownButton(
                             isExpanded: true,
                             value: _selectedQuestion,
-                            items: _dropdownMenuItems,
+                            items: List<DropdownMenuItem>.from(choices
+                                .categoryList
+                                .map((String cat) => DropdownMenuItem(
+                                    value: cat, child: Text(cat)))
+                                .toList()),
                             onChanged: (value) {
                               setState(() {
                                 _selectedQuestion = value;
@@ -155,7 +190,7 @@ class _DecideScreenState extends State<DecideScreen>
                                 children: <Widget>[
                                   Image.asset('assets/images/no_entries.png'),
                                   Text(
-                                    'Add at least a choice to the question to begin.',
+                                    'Select a question or add at least a choice to the question to begin.',
                                     style: Theme.of(context).textTheme.title,
                                     textAlign: TextAlign.center,
                                   ),

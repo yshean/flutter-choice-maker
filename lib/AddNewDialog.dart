@@ -19,6 +19,7 @@ class _AddNewDialogState extends State<AddNewDialog> {
   double _sliderValue = 3.0;
   String _answer;
   TextEditingController _answerController = TextEditingController();
+  TextEditingController _questionController = TextEditingController();
 
   static List<DropdownMenuItem> _dropdownMenuItems = [
     DropdownMenuItem(value: "What for lunch?", child: Text("What for lunch?")),

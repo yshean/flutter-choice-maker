@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import "package:mobx/mobx.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -94,6 +93,11 @@ abstract class _Choices with Store {
     print("[Store] Choices Length: " + choices.length.toString());
     _processResult();
     saveLocal();
+  }
+
+  @computed
+  get categoryList {
+    return choicesMap.keys != null ? choicesMap.keys.toList() : [];
   }
 
   @computed
