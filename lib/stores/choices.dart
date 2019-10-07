@@ -1,4 +1,6 @@
 import "package:mobx/mobx.dart";
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 import '../models/Choice.dart';
 
@@ -28,6 +30,31 @@ abstract class _Choices with Store {
   ObservableMap<String, ObservableList<Choice>> choicesMap =
       ObservableMap<String, ObservableList<Choice>>();
 
+  _Choices() {
+    loadLocal();
+  }
+
+  void saveLocal() async {
+    print("Saving to shared preferences");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        "choices", json.encode(choices.map((ch) => ch.toJson()).toList()));
+  }
+
+  void loadLocal() async {
+    print("Loading from shared preferences");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final localStoreValue = prefs.getString("choices");
+    if (localStoreValue != null) {
+      final choicesJson = await json.decode(localStoreValue);
+      final choicesList = List<Choice>.from(choicesJson
+          .map((choiceJson) => Choice.fromJson(choiceJson))
+          .toList());
+      choices = ObservableList<Choice>.of(choicesList);
+      _processResult();
+    }
+  }
+
   void _processResult() {
     print("Run _processResult()");
     // Create a set of (unique) categories
@@ -46,6 +73,7 @@ abstract class _Choices with Store {
   void addChoice(Choice choice) {
     choices.add(choice);
     _processResult();
+    saveLocal();
   }
 
   @action
@@ -54,6 +82,7 @@ abstract class _Choices with Store {
     final editIndex = choices.indexWhere((ch) => ch.id == choice.id);
     choices[editIndex] = choice;
     _processResult();
+    saveLocal();
   }
 
   @action
@@ -62,5 +91,6 @@ abstract class _Choices with Store {
     choices.removeWhere((item) => item.id == id);
     print("[Store] Choices Length: " + choices.length.toString());
     _processResult();
+    saveLocal();
   }
 }

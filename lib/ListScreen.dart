@@ -2,7 +2,6 @@ import 'package:choice_maker/AddNewDialog.dart';
 import 'package:choice_maker/stores/choices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -96,23 +95,6 @@ class ListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Choices choices = Provider.of<Choices>(context);
     print("Choices length: " + choices.choices.length.toString());
-
-    // autorun((_) {
-    //   print("Run autorun");
-    //   // Create a set of (unique) categories
-    //   Set categories = Set.from(choices.choices.map((v) => v.category));
-
-    //   // Sort entries according to likelihood
-    //   choices.choices
-    //       .sort((Choice a, Choice b) => b.likelihood.compareTo(a.likelihood));
-
-    //   for (var cat in categories) {
-    //     choices.choicesMap[cat] = List<Choice>.from(
-    //         choices.choices.where((entry) => (entry.category == cat)));
-    //   }
-
-    //   // setState(() {});
-    // });
 
     return Observer(
       builder: (_) => Scaffold(
