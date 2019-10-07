@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'stores/choices.dart'; // import the Counter
-import 'ListScreen.dart';
+import 'DecideScreen.dart';
 
 final store = Choices(); // instantiate the store
 
@@ -47,6 +47,6 @@ class MyHomePage extends StatelessWidget {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return ListScreen();
+    return DecideScreen();
   }
 }

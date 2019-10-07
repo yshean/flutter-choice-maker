@@ -1,7 +1,3 @@
-// import 'package:uuid/uuid.dart';
-
-// var uuid = Uuid();
-
 class Choice {
   String id;
   String category;
