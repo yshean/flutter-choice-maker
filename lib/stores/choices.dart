@@ -93,4 +93,9 @@ abstract class _Choices with Store {
     _processResult();
     saveLocal();
   }
+
+  @computed
+  Choice randomChoice(String category) {
+    return choicesMap[category].first;
+  }
 }
