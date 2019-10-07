@@ -6,6 +6,27 @@ import 'package:sprung/sprung.dart';
 
 import 'stores/choices.dart';
 
+class GrowTransition extends StatelessWidget {
+  GrowTransition({this.child, this.animation});
+
+  final Widget child;
+  final Animation<double> animation;
+
+  Widget build(BuildContext context) => Center(
+        child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) => ClipOval(
+                  child: Container(
+                    height: animation.value,
+                    width: animation.value,
+                    color: Colors.yellow,
+                    child: child,
+                  ),
+                ),
+            child: child),
+      );
+}
+
 class DecideScreen extends StatefulWidget {
   const DecideScreen({Key key}) : super(key: key);
 
@@ -13,8 +34,32 @@ class DecideScreen extends StatefulWidget {
   _DecideScreenState createState() => _DecideScreenState();
 }
 
-class _DecideScreenState extends State<DecideScreen> {
-  bool _isOffset = false;
+class _DecideScreenState extends State<DecideScreen>
+    with SingleTickerProviderStateMixin {
+  Animation<double> animation;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 120, end: 160).animate(controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,32 +98,22 @@ class _DecideScreenState extends State<DecideScreen> {
               )
             : Center(
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isOffset = !_isOffset;
-                    });
-                  },
-                  child: ClipOval(
-                    child: AnimatedContainer(
-                      color: Colors.yellow,
-                      height: _isOffset ? 60 : 120,
-                      width: _isOffset ? 60 : 120,
-                      child: Center(
-                        child: Text('Decide!'),
-                      ),
-                      duration: Duration(milliseconds: 300),
-                      curve: Sprung(),
+                  onTap: () {},
+                  child: GrowTransition(
+                    child: Center(
+                      child: Text('Decide!',
+                          style: TextStyle(
+                              fontSize: 26, fontWeight: FontWeight.w600)),
                     ),
+                    animation: animation,
                   ),
                 ),
               ),
-        floatingActionButton: choices.choices.length == 0
-            ? FloatingActionButton(
-                onPressed: () => _gotoListScreen(context),
-                tooltip: 'Add a choice',
-                child: Icon(Icons.list),
-              )
-            : null,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _gotoListScreen(context),
+          tooltip: 'Add a choice',
+          child: Icon(Icons.list),
+        ),
       ),
     );
   }
